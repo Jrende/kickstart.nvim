@@ -1,3 +1,11 @@
+-- for nvim-tree
+-- disable netrw at the very start of your init.lua
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+-- optionally enable 24-bit colour
+vim.opt.termguicolors = true
+
 --[[
 
 =====================================================================
@@ -91,7 +99,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -125,8 +133,8 @@ vim.opt.breakindent = true
 vim.opt.undofile = true
 
 -- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
+vim.opt.ignorecase = false
+vim.opt.smartcase = false
 
 -- Keep signcolumn on by default
 vim.opt.signcolumn = 'yes'
@@ -228,6 +236,40 @@ vim.opt.rtp:prepend(lazypath)
 --
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
+    {
+      "nvim-telescope/telescope.nvim",
+      dependencies = {
+        "nvim-lua/plenary.nvim",
+        "debugloop/telescope-undo.nvim",
+      },
+      config = function()
+        require("telescope").setup({
+            -- the rest of your telescope config goes here
+            extensions = {
+              undo = {
+                -- telescope-undo.nvim config, see below
+              },
+              -- other extensions:
+              -- file_browser = { ... }
+            },
+          })
+        require("telescope").load_extension("undo")
+        -- optional: vim.keymap.set("n", "<leader>u", "<cmd>Telescope undo<cr>")
+      end,
+    },
+    'nvim-tree/nvim-web-devicons',
+    {
+      'nvim-tree/nvim-tree.lua',
+      version = '*',
+      lazy = false,
+      dependencies = {
+        'nvim-tree/nvim-web-devicons',
+      },
+      config = function()
+        require('nvim-tree').setup {}
+      end,
+    },
+
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
@@ -712,7 +754,8 @@ require('lazy').setup({
         -- python = { "isort", "black" },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
+        javascript = { "prettierd", "prettier", stop_after_first = true },
+        typescriptreact = { "prettierd", "prettier", stop_after_first = true },
       },
     },
   },
@@ -964,6 +1007,11 @@ require('lazy').setup({
     },
   },
 })
+vim.keymap.set('n', '<leader>e', ':NvimTreeFindFileToggle<CR>', { noremap = true })
+vim.keymap.set('', ']q', ':cn<CR>', { noremap = true })
+vim.keymap.set('', '[q', ':cp<CR>', { noremap = true })
+vim.cmd [[colorscheme koehler]]
+
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
