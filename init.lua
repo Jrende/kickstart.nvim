@@ -1153,7 +1153,10 @@ vim.keymap.set('', '[q', ':cp<CR>', { noremap = true })
 
 vim.api.nvim_create_autocmd('BufWritePre', {
   callback = function()
-    vim.lsp.buf.format()
+    -- lsp format made the cursor jump around
+    --vim.lsp.buf.format()
+
+    require('conform').format { async = true, lsp_format = 'fallback' }
   end,
 })
 
