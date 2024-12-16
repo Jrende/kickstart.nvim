@@ -1071,6 +1071,17 @@ require('lazy').setup({
       },
     },
   },
+  {
+    'sainnhe/gruvbox-material',
+    lazy = false,
+    priority = 1000,
+    config = function()
+      -- Optionally configure and load the colorscheme
+      -- directly inside the plugin declaration.
+      vim.g.gruvbox_material_enable_italic = true
+      vim.cmd.colorscheme 'gruvbox-material'
+    end,
+  },
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
@@ -1122,7 +1133,7 @@ require('lazy').setup({
 vim.keymap.set('n', '<leader>e', ':NvimTreeFindFileToggle<CR>', { noremap = true })
 vim.keymap.set('', ']q', ':cn<CR>', { noremap = true })
 vim.keymap.set('', '[q', ':cp<CR>', { noremap = true })
-vim.cmd [[colorscheme koehler]]
+-- vim.cmd [[colorscheme koehler]]
 
 vim.api.nvim_create_autocmd('BufWritePre', {
   callback = function()
