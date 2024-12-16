@@ -1130,6 +1130,22 @@ require('lazy').setup({
   },
 })
 
+vim.opt.clipboard = 'unnamedplus'
+
+if vim.fn.has 'wsl' == 1 then
+  vim.g.clipboard = {
+    name = 'win32yank-wsl',
+    copy = {
+      ['+'] = 'win32yank.exe -i --crlf',
+      ['*'] = 'win32yank.exe -i --crlf',
+    },
+    paste = {
+      ['+'] = 'win32yank.exe -o --lf',
+      ['*'] = 'win32yank.exe -o --lf',
+    },
+    cache_enabled = 0,
+  }
+end
 vim.keymap.set('n', '<leader>e', ':NvimTreeFindFileToggle<CR>', { noremap = true })
 vim.keymap.set('', ']q', ':cn<CR>', { noremap = true })
 vim.keymap.set('', '[q', ':cp<CR>', { noremap = true })
