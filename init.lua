@@ -733,16 +733,47 @@ require('lazy').setup({
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
-      require('mason-lspconfig').setup {
-        handlers = {
-          function(server_name)
-            local server = servers[server_name] or {}
-            -- This handles overriding only values explicitly passed
-            -- by the server configuration above. Useful when disabling
-            -- certain features of an LSP (for example, turning off formatting for ts_ls)
-            server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            require('lspconfig')[server_name].setup(server)
-          end,
+      --
+      -- require('mason-lspconfig').setup {
+      -- handlers = {
+      -- function(server_name)
+      -- local server = servers[server_name] or {}
+      -- -- This handles overriding only values explicitly passed
+      -- -- by the server configuration above. Useful when disabling
+      -- -- certain features of an LSP (for example, turning off formatting for ts_ls)
+      -- server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+      -- require('lspconfig')[server_name].setup(server)
+      -- end,
+      -- },
+      -- }
+
+      require('mason-lspconfig').setup_handlers {
+        -- The first entry (without a key) will be the default handler
+        -- and will be called for each installed server that doesn't have
+        -- a dedicated handler.
+        function(server_name) -- default handler (optional)
+          require('lspconfig')[server_name].setup {}
+        end,
+        -- Next, you can provide a dedicated handler for specific servers.
+        -- For example, a handler override for the `rust_analyzer`:
+        ['rust_analyzer'] = function()
+          require('rust-tools').setup {}
+        end,
+      }
+      require('lspconfig').ts_ls.setup {
+        init_options = {
+          plugins = {
+            {
+              name = '@vue/typescript-plugin',
+              location = '/usr/local/lib/node_modules/@vue/typescript-plugin',
+              languages = { 'javascript', 'typescript', 'vue' },
+            },
+          },
+        },
+        filetypes = {
+          'javascript',
+          'typescript',
+          'vue',
         },
       }
     end,
